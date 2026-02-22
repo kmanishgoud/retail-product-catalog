@@ -1,0 +1,113 @@
+<div style="background: #f5f5f7; min-height: 100vh; display: flex; align-items: center;
+            justify-content: center; padding: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;">
+  <div style="width: 100%; max-width: 420px;">
+
+    <!-- Logo -->
+    <div class="text-center mb-4">
+      <h1 style="font-size: 1.5rem; font-weight: 700; color: #1d1d1f;">🛍️ ProductCatalog</h1>
+      <p style="color: #6e6e73; font-size: 0.9rem; margin: 4px 0 0;">Create your account</p>
+    </div>
+
+    <!-- Card -->
+    <div style="background: white; border-radius: 20px;
+                box-shadow: 0 2px 16px rgba(0,0,0,0.08); padding: 36px;">
+
+      <h2 style="font-weight: 700; font-size: 1.4rem; color: #1d1d1f;
+                 margin-bottom: 24px; text-align: center;">
+        Create account
+      </h2>
+
+      <!-- Error -->
+      <div *ngIf="errorMessage"
+           style="background: #fce4ec; border-radius: 12px; padding: 14px 18px;
+                  color: #c62828; font-size: 0.88rem; margin-bottom: 20px;">
+         {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <!-- Name -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 0.78rem; font-weight: 600;
+                        color: #1d1d1f; margin-bottom: 8px; letter-spacing: 0.2px;">
+            FULL NAME
+          </label>
+          <input type="text" formControlName="name"
+                 placeholder="Manish Goud"
+                 style="width: 100%; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                        padding: 12px 16px; font-size: 0.95rem; color: #1d1d1f;
+                        outline: none; font-family: inherit;"
+                 [style.borderColor]="f['name'].invalid && f['name'].touched ? '#c62828' : '#d2d2d7'"
+                 onfocus="this.style.borderColor='#0071e3'"
+                 onblur="this.style.borderColor=''">
+          <p *ngIf="f['name'].invalid && f['name'].touched"
+             style="color: #c62828; font-size: 0.78rem; margin: 6px 0 0 4px;">
+            Name must be at least 2 characters.
+          </p>
+        </div>
+
+        <!-- Email -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 0.78rem; font-weight: 600;
+                        color: #1d1d1f; margin-bottom: 8px; letter-spacing: 0.2px;">
+            EMAIL
+          </label>
+          <input type="email" formControlName="email"
+                 placeholder="you@example.com"
+                 style="width: 100%; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                        padding: 12px 16px; font-size: 0.95rem; color: #1d1d1f;
+                        outline: none; font-family: inherit;"
+                 [style.borderColor]="f['email'].invalid && f['email'].touched ? '#c62828' : '#d2d2d7'"
+                 onfocus="this.style.borderColor='#0071e3'"
+                 onblur="this.style.borderColor=''">
+          <p *ngIf="f['email'].invalid && f['email'].touched"
+             style="color: #c62828; font-size: 0.78rem; margin: 6px 0 0 4px;">
+            Please enter a valid email.
+          </p>
+        </div>
+
+        <!-- Password -->
+        <div style="margin-bottom: 28px;">
+          <label style="display: block; font-size: 0.78rem; font-weight: 600;
+                        color: #1d1d1f; margin-bottom: 8px; letter-spacing: 0.2px;">
+            PASSWORD
+          </label>
+          <input type="password" formControlName="password"
+                 placeholder="••••••••"
+                 style="width: 100%; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                        padding: 12px 16px; font-size: 0.95rem; color: #1d1d1f;
+                        outline: none; font-family: inherit;"
+                 [style.borderColor]="f['password'].invalid && f['password'].touched ? '#c62828' : '#d2d2d7'"
+                 onfocus="this.style.borderColor='#0071e3'"
+                 onblur="this.style.borderColor=''">
+          <p *ngIf="f['password'].invalid && f['password'].touched"
+             style="color: #c62828; font-size: 0.78rem; margin: 6px 0 0 4px;">
+            Password must be at least 6 characters.
+          </p>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" [disabled]="isSubmitting"
+                style="width: 100%; background: #0071e3; color: white; border: none;
+                       border-radius: 980px; padding: 16px; font-size: 1rem;
+                       font-weight: 500; cursor: pointer; font-family: inherit;"
+                onmouseover="this.style.background='#0077ed'"
+                onmouseout="this.style.background='#0071e3'">
+          {{ isSubmitting ? 'Creating account...' : 'Create Account' }}
+        </button>
+
+      </form>
+
+      <!-- Login Link -->
+      <p style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: #6e6e73;">
+        Already have an account?
+        <a routerLink="/login"
+           style="color: #0071e3; text-decoration: none; font-weight: 500;">
+          Sign in
+        </a>
+      </p>
+
+    </div>
+  </div>
+</div>

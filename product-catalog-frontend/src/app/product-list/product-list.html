@@ -1,0 +1,223 @@
+<div style="background: #f5f5f7; min-height: 100vh; padding: 48px 32px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;">
+
+  <!-- Header -->
+  <div class="mb-4">
+    <h1 style="font-weight: 700; font-size: 2.2rem; color: #1d1d1f;
+               letter-spacing: -0.5px; margin-bottom: 4px;">
+      Product Catalog
+    </h1>
+    <p style="color: #6e6e73; font-size: 0.95rem; margin: 0;">
+      {{ totalElements }} product{{ totalElements !== 1 ? 's' : '' }} available
+    </p>
+  </div>
+
+  <!-- Search & Filter Bar -->
+  <div style="background: white; border-radius: 16px; padding: 20px 24px;
+              box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 32px;">
+    <div class="row g-3 align-items-end">
+
+      <div class="col-md-5">
+        <label style="font-size: 0.78rem; font-weight: 600; color: #6e6e73;
+                      letter-spacing: 0.3px; display: block; margin-bottom: 8px;">
+          SEARCH
+        </label>
+        <div style="position: relative;">
+          <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+                       color: #6e6e73; font-size: 0.9rem;"></span>
+          <input type="text"
+                 [(ngModel)]="searchKeyword"
+                 (keyup.enter)="onSearch()"
+                 placeholder="Search products..."
+                 style="width: 100%; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                        padding: 11px 16px 11px 38px; font-size: 0.9rem; color: #1d1d1f;
+                        outline: none; font-family: inherit;"
+                 onfocus="this.style.borderColor='#0071e3'"
+                 onblur="this.style.borderColor='#d2d2d7'">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label style="font-size: 0.78rem; font-weight: 600; color: #6e6e73;
+                      letter-spacing: 0.3px; display: block; margin-bottom: 8px;">
+          CATEGORY
+        </label>
+        <select [(ngModel)]="selectedCategory"
+                (change)="onCategoryChange()"
+                style="width: 100%; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                       padding: 11px 16px; font-size: 0.9rem; color: #1d1d1f;
+                       outline: none; background: white; cursor: pointer; font-family: inherit;"
+                onfocus="this.style.borderColor='#0071e3'"
+                onblur="this.style.borderColor='#d2d2d7'">
+          <option value="">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-3 d-flex gap-2">
+        <button (click)="onSearch()"
+                style="flex: 1; background: #0071e3; color: white; border: none;
+                       border-radius: 10px; padding: 11px 16px; font-size: 0.9rem;
+                       font-weight: 500; cursor: pointer; font-family: inherit;"
+                onmouseover="this.style.background='#0077ed'"
+                onmouseout="this.style.background='#0071e3'">
+          Search
+        </button>
+        <button (click)="onClearFilters()"
+                style="flex: 1; background: white; color: #1d1d1f; border: 1.5px solid #d2d2d7;
+                       border-radius: 10px; padding: 11px 16px; font-size: 0.9rem;
+                       cursor: pointer; font-family: inherit;"
+                onmouseover="this.style.background='#f5f5f7'"
+                onmouseout="this.style.background='white'">
+          Clear
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div *ngIf="showDeleteConfirm"
+       style="position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000;
+              display: flex; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 20px; padding: 36px; max-width: 420px;
+                width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.2); text-align: center;">
+      <div style="font-size: 2.5rem; margin-bottom: 16px;">🗑️</div>
+      <h3 style="font-weight: 700; color: #1d1d1f; margin-bottom: 8px;">Delete Product?</h3>
+      <p style="color: #6e6e73; font-size: 0.9rem; margin-bottom: 28px;">
+        Are you sure you want to delete <strong>{{ productToDelete?.name }}</strong>?
+        This action cannot be undone.
+      </p>
+      <div class="d-flex gap-3 justify-content-center">
+        <button (click)="cancelDelete()"
+                style="background: white; border: 1.5px solid #d2d2d7; border-radius: 980px;
+                       padding: 12px 28px; font-size: 0.9rem; cursor: pointer; font-family: inherit;">
+          Cancel
+        </button>
+        <button (click)="executeDelete()"
+                style="background: #c62828; color: white; border: none; border-radius: 980px;
+                       padding: 12px 28px; font-size: 0.9rem; font-weight: 500;
+                       cursor: pointer; font-family: inherit;"
+                onmouseover="this.style.background='#b71c1c'"
+                onmouseout="this.style.background='#c62828'">
+          {{ deletingId ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div style="display: inline-block; width: 40px; height: 40px; border: 3px solid #d2d2d7;
+                border-top-color: #0071e3; border-radius: 50%; animation: spin 0.8s linear infinite;">
+    </div>
+    <p style="color: #6e6e73; margin-top: 16px; font-size: 0.9rem;">Loading products...</p>
+  </div>
+
+  <!-- Product Grid -->
+  <div *ngIf="!isLoading" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
+    <div class="col" *ngFor="let product of products">
+      <div class="h-100"
+           style="background: white; border-radius: 18px; overflow: hidden;
+                  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+                  transition: transform 0.25s ease, box-shadow 0.25s ease;"
+           onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 28px rgba(0,0,0,0.12)'"
+           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
+
+        <!-- Product Image -->
+        <div style="background: #f5f5f7; height: 200px; display: flex;
+                    align-items: center; justify-content: center; overflow: hidden;">
+          <img [src]="product.imageUrl"
+               [alt]="product.name"
+               style="max-height: 170px; max-width: 100%; object-fit: contain; padding: 16px;"
+               onerror="this.src='https://via.placeholder.com/200x170?text=No+Image'">
+        </div>
+
+        <!-- Product Info -->
+        <div style="padding: 20px;">
+          <span style="font-size: 0.72rem; font-weight: 600; color: #0071e3;
+                       text-transform: uppercase; letter-spacing: 0.5px;">
+            {{ product.category }}
+          </span>
+
+          <h3 style="font-size: 1rem; font-weight: 600; color: #1d1d1f;
+                     margin: 6px 0 8px; line-height: 1.4;">
+            {{ product.name }}
+          </h3>
+
+          <p style="font-size: 0.82rem; color: #6e6e73; line-height: 1.5;
+                    margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical; overflow: hidden;">
+            {{ product.description }}
+          </p>
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span style="font-size: 1.1rem; font-weight: 700; color: #1d1d1f;">
+              £{{ product.price | number:'1.2-2' }}
+            </span>
+            <span [style.background]="product.stockQuantity > 10 ? '#e8f5e9' : product.stockQuantity > 0 ? '#fff8e1' : '#fce4ec'"
+                  [style.color]="product.stockQuantity > 10 ? '#2e7d32' : product.stockQuantity > 0 ? '#f57f17' : '#c62828'"
+                  style="font-size: 0.72rem; font-weight: 600; padding: 4px 10px; border-radius: 980px;">
+              {{ product.stockQuantity > 0 ? 'In Stock (' + product.stockQuantity + ')' : 'Out of Stock' }}
+            </span>
+          </div>
+
+          <!-- Edit & Delete — Admin only -->
+          <div *ngIf="isAdmin" class="d-flex gap-2">
+            <a [routerLink]="['/edit-product', product.id]"
+               style="flex: 1; text-align: center; background: #f5f5f7; color: #1d1d1f;
+                      border: none; border-radius: 8px; padding: 9px; font-size: 0.82rem;
+                      font-weight: 500; text-decoration: none; cursor: pointer;"
+               onmouseover="this.style.background='#e8e8ed'"
+               onmouseout="this.style.background='#f5f5f7'">
+               Edit
+            </a>
+            <button (click)="confirmDelete(product)"
+                    style="flex: 1; background: #fce4ec; color: #c62828; border: none;
+                           border-radius: 8px; padding: 9px; font-size: 0.82rem;
+                           font-weight: 500; cursor: pointer;"
+                    onmouseover="this.style.background='#f8bbd0'"
+                    onmouseout="this.style.background='#fce4ec'">
+               Delete
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ↑ Product Grid ends here -->
+
+  <!-- Empty State — outside the grid -->
+  <div *ngIf="!isLoading && products.length === 0" class="text-center py-5">
+    <p style="font-size: 3rem;"></p>
+    <p style="font-size: 1.1rem; color: #6e6e73; margin-bottom: 8px;">No products found.</p>
+    <button (click)="onClearFilters()"
+            style="background: none; border: none; color: #0071e3; cursor: pointer; font-size: 0.9rem;">
+      Clear filters →
+    </button>
+  </div>
+
+  <!-- Pagination — outside the grid -->
+  <div *ngIf="!isLoading && totalPages > 1"
+       class="d-flex justify-content-center align-items-center gap-3 mt-5">
+    <button (click)="loadProducts(currentPage - 1)"
+            [disabled]="currentPage === 0"
+            style="background: white; border: 1px solid #d2d2d7; border-radius: 980px;
+                   padding: 8px 20px; font-size: 0.85rem; color: #1d1d1f; cursor: pointer;"
+            [style.opacity]="currentPage === 0 ? '0.4' : '1'">
+      ← Previous
+    </button>
+    <span style="font-size: 0.85rem; color: #6e6e73;">
+      Page {{ currentPage + 1 }} of {{ totalPages }}
+    </span>
+    <button (click)="loadProducts(currentPage + 1)"
+            [disabled]="currentPage >= totalPages - 1"
+            style="background: white; border: 1px solid #d2d2d7; border-radius: 980px;
+                   padding: 8px 20px; font-size: 0.85rem; color: #1d1d1f; cursor: pointer;"
+            [style.opacity]="currentPage >= totalPages - 1 ? '0.4' : '1'">
+      Next →
+    </button>
+  </div>
+
+</div>

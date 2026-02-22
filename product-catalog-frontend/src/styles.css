@@ -1,0 +1,20 @@
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f5f5f7;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.active-link {
+  color: #1d1d1f !important;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

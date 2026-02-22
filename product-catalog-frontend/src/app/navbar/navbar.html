@@ -1,0 +1,70 @@
+<nav style="background: rgba(255,255,255,0.85); backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;">
+  <div class="container-fluid px-4 px-md-5">
+    <div class="d-flex justify-content-between align-items-center" style="height: 56px;">
+
+      <a routerLink="/"
+         style="font-size: 1.1rem; font-weight: 700; color: #1d1d1f;
+                text-decoration: none; letter-spacing: -0.3px;">
+         ProductCatalog
+      </a>
+
+      <div class="d-flex align-items-center gap-4">
+        <a routerLink="/"
+           routerLinkActive="active-link"
+           [routerLinkActiveOptions]="{ exact: true }"
+           style="font-size: 0.88rem; color: #6e6e73; text-decoration: none; font-weight: 500;"
+           onmouseover="this.style.color='#1d1d1f'"
+           onmouseout="this.style.color=''">
+          All Products
+        </a>
+
+        <!-- Logged in -->
+        <ng-container *ngIf="isLoggedIn">
+          <span style="font-size: 0.88rem; color: #6e6e73;">
+             {{ userName }}
+          </span>
+
+          <!-- Admin only -->
+          <a *ngIf="isAdmin" routerLink="/create-product"
+             style="background: #0071e3; color: white; border-radius: 980px;
+                    padding: 7px 18px; font-size: 0.85rem; font-weight: 500;
+                    text-decoration: none;"
+             onmouseover="this.style.background='#0077ed'"
+             onmouseout="this.style.background='#0071e3'">
+            + Add Product
+          </a>
+
+          <button (click)="logout()"
+                  style="background: none; border: 1.5px solid #d2d2d7; border-radius: 980px;
+                         padding: 7px 18px; font-size: 0.85rem; color: #1d1d1f;
+                         cursor: pointer; font-family: inherit;"
+                  onmouseover="this.style.background='#f5f5f7'"
+                  onmouseout="this.style.background='none'">
+            Sign Out
+          </button>
+        </ng-container>
+
+        <!-- Logged out -->
+        <ng-container *ngIf="!isLoggedIn">
+          <a routerLink="/login"
+             style="font-size: 0.88rem; color: #6e6e73; text-decoration: none; font-weight: 500;"
+             onmouseover="this.style.color='#1d1d1f'"
+             onmouseout="this.style.color=''">
+            Sign In
+          </a>
+          <a routerLink="/register"
+             style="background: #0071e3; color: white; border-radius: 980px;
+                    padding: 7px 18px; font-size: 0.85rem; font-weight: 500;
+                    text-decoration: none;"
+             onmouseover="this.style.background='#0077ed'"
+             onmouseout="this.style.background='#0071e3'">
+            Register
+          </a>
+        </ng-container>
+      </div>
+
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,214 @@
+<div style="background: #f5f5f7; min-height: 100vh; padding: 48px 24px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+
+        <!-- Back Button -->
+        <button (click)="goBack()"
+                style="background: none; border: none; color: #0071e3; font-size: 0.9rem;
+                       cursor: pointer; padding: 0; margin-bottom: 32px; display: flex;
+                       align-items: center; gap: 6px;">
+          ← Back to Catalog
+        </button>
+
+        <!-- Title -->
+        <div class="mb-4">
+          <h1 style="font-weight: 700; font-size: 2rem; color: #1d1d1f;
+                     letter-spacing: -0.5px; margin-bottom: 6px;">
+            Add New Product
+          </h1>
+          <p style="color: #6e6e73; font-size: 0.9rem; margin: 0;">
+            Fill in the details below to add a product to your catalog.
+          </p>
+        </div>
+
+        <!-- Success Alert -->
+        <div *ngIf="successMessage"
+             style="background: #e8f5e9; border-radius: 12px; padding: 16px 20px;
+                    color: #2e7d32; font-size: 0.9rem; margin-bottom: 24px;
+                    display: flex; align-items: center; gap: 10px;">
+           {{ successMessage }}
+        </div>
+
+        <!-- Error Alert -->
+        <div *ngIf="errorMessage"
+             style="background: #fce4ec; border-radius: 12px; padding: 16px 20px;
+                    color: #c62828; font-size: 0.9rem; margin-bottom: 24px;
+                    display: flex; align-items: center; gap: 10px;">
+           {{ errorMessage }}
+        </div>
+
+        <!-- Form Card -->
+        <div style="background: white; border-radius: 20px;
+                    box-shadow: 0 2px 16px rgba(0,0,0,0.08); padding: 36px;">
+          <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+
+            <!-- Product Name -->
+            <div style="margin-bottom: 24px;">
+              <label style="display: block; font-size: 0.82rem; font-weight: 600;
+                            color: #1d1d1f; margin-bottom: 8px; letter-spacing: 0.2px;">
+                PRODUCT NAME
+              </label>
+              <input type="text"
+                     formControlName="name"
+                     placeholder="e.g. iPhone 15 Pro"
+                     style="width: 100%; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                            padding: 12px 16px; font-size: 0.95rem; color: #1d1d1f;
+                            outline: none; transition: border-color 0.2s ease;
+                            font-family: -apple-system, BlinkMacSystemFont, sans-serif;"
+                     [style.borderColor]="f['name'].invalid && f['name'].touched ? '#c62828' : '#d2d2d7'"
+                     onfocus="this.style.borderColor='#0071e3'"
+                     onblur="this.style.borderColor=''">
+              <p *ngIf="f['name'].invalid && f['name'].touched"
+                 style="color: #c62828; font-size: 0.78rem; margin: 6px 0 0 4px;">
+                Name is required and must be at least 2 characters.
+              </p>
+            </div>
+
+            <!-- Description -->
+            <div style="margin-bottom: 24px;">
+              <label style="display: block; font-size: 0.82rem; font-weight: 600;
+                            color: #1d1d1f; margin-bottom: 8px; letter-spacing: 0.2px;">
+                DESCRIPTION
+              </label>
+              <textarea formControlName="description"
+                        rows="3"
+                        placeholder="Describe the product..."
+                        style="width: 100%; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                               padding: 12px 16px; font-size: 0.95rem; color: #1d1d1f;
+                               outline: none; transition: border-color 0.2s ease; resize: vertical;
+                               font-family: -apple-system, BlinkMacSystemFont, sans-serif;"
+                        [style.borderColor]="f['description'].invalid && f['description'].touched ? '#c62828' : '#d2d2d7'"
+                        onfocus="this.style.borderColor='#0071e3'"
+                        onblur="this.style.borderColor=''"></textarea>
+              <p *ngIf="f['description'].invalid && f['description'].touched"
+                 style="color: #c62828; font-size: 0.78rem; margin: 6px 0 0 4px;">
+                Description is required and must be at least 10 characters.
+              </p>
+            </div>
+
+            <!-- Price & Stock -->
+            <div class="row g-3" style="margin-bottom: 24px;">
+              <div class="col-md-6">
+                <label style="display: block; font-size: 0.82rem; font-weight: 600;
+                              color: #1d1d1f; margin-bottom: 8px; letter-spacing: 0.2px;">
+                  PRICE
+                </label>
+                <div style="display: flex; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                            overflow: hidden; transition: border-color 0.2s ease;"
+                     [style.borderColor]="f['price'].invalid && f['price'].touched ? '#c62828' : '#d2d2d7'">
+                  <select formControlName="currency"
+                          style="border: none; background: #f5f5f7; padding: 12px 10px;
+                                 font-size: 0.9rem; color: #1d1d1f; outline: none;
+                                 cursor: pointer;">
+                    <option value="GBP">£</option>
+                    <option value="EUR">€</option>
+                    <option value="INR">₹</option>
+                  </select>
+                  <input type="number"
+                         formControlName="price"
+                         placeholder="0.00"
+                         step="0.01"
+                         style="flex: 1; border: none; padding: 12px 16px;
+                                font-size: 0.95rem; color: #1d1d1f; outline: none;
+                                font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
+                </div>
+                <p *ngIf="f['price'].invalid && f['price'].touched"
+                   style="color: #c62828; font-size: 0.78rem; margin: 6px 0 0 4px;">
+                  Price is required and must be greater than 0.
+                </p>
+              </div>
+
+              <div class="col-md-6">
+                <label style="display: block; font-size: 0.82rem; font-weight: 600;
+                              color: #1d1d1f; margin-bottom: 8px; letter-spacing: 0.2px;">
+                  STOCK QUANTITY
+                </label>
+                <input type="number"
+                       formControlName="stockQuantity"
+                       placeholder="0"
+                       style="width: 100%; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                              padding: 12px 16px; font-size: 0.95rem; color: #1d1d1f;
+                              outline: none; transition: border-color 0.2s ease;
+                              font-family: -apple-system, BlinkMacSystemFont, sans-serif;"
+                       [style.borderColor]="f['stockQuantity'].invalid && f['stockQuantity'].touched ? '#c62828' : '#d2d2d7'"
+                       onfocus="this.style.borderColor='#0071e3'"
+                       onblur="this.style.borderColor=''">
+                <p *ngIf="f['stockQuantity'].invalid && f['stockQuantity'].touched"
+                   style="color: #c62828; font-size: 0.78rem; margin: 6px 0 0 4px;">
+                  Stock quantity is required and cannot be negative.
+                </p>
+              </div>
+            </div>
+
+            <!-- Category -->
+            <div style="margin-bottom: 24px;">
+              <label style="display: block; font-size: 0.82rem; font-weight: 600;
+                            color: #1d1d1f; margin-bottom: 8px; letter-spacing: 0.2px;">
+                CATEGORY
+              </label>
+              <select formControlName="category"
+                      style="width: 100%; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                             padding: 12px 16px; font-size: 0.95rem; color: #1d1d1f;
+                             outline: none; transition: border-color 0.2s ease;
+                             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                             background: white; cursor: pointer;"
+                      [style.borderColor]="f['category'].invalid && f['category'].touched ? '#c62828' : '#d2d2d7'">
+                <option value="">-- Select Category --</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Books">Books</option>
+                <option value="Home & Kitchen">Home & Kitchen</option>
+                <option value="Sports">Sports</option>
+                <option value="Toys">Toys</option>
+                <option value="Beauty">Beauty</option>
+                <option value="Automotive">Automotive</option>
+              </select>
+              <p *ngIf="f['category'].invalid && f['category'].touched"
+                 style="color: #c62828; font-size: 0.78rem; margin: 6px 0 0 4px;">
+                Please select a category.
+              </p>
+            </div>
+
+            <!-- Image URL -->
+            <div style="margin-bottom: 32px;">
+              <label style="display: block; font-size: 0.82rem; font-weight: 600;
+                            color: #1d1d1f; margin-bottom: 8px; letter-spacing: 0.2px;">
+                IMAGE URL
+              </label>
+              <input type="url"
+                     formControlName="imageUrl"
+                     placeholder="https://example.com/image.jpg"
+                     style="width: 100%; border: 1.5px solid #d2d2d7; border-radius: 10px;
+                            padding: 12px 16px; font-size: 0.95rem; color: #1d1d1f;
+                            outline: none; transition: border-color 0.2s ease;
+                            font-family: -apple-system, BlinkMacSystemFont, sans-serif;"
+                     [style.borderColor]="f['imageUrl'].invalid && f['imageUrl'].touched ? '#c62828' : '#d2d2d7'"
+                     onfocus="this.style.borderColor='#0071e3'"
+                     onblur="this.style.borderColor=''">
+              <p *ngIf="f['imageUrl'].invalid && f['imageUrl'].touched"
+                 style="color: #c62828; font-size: 0.78rem; margin: 6px 0 0 4px;">
+                Image URL is required.
+              </p>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                    [disabled]="isSubmitting"
+                    style="width: 100%; background: #0071e3; color: white; border: none;
+                           border-radius: 980px; padding: 16px; font-size: 1rem;
+                           font-weight: 500; cursor: pointer; transition: background 0.2s ease;
+                           font-family: -apple-system, BlinkMacSystemFont, sans-serif;"
+                    onmouseover="this.style.background='#0077ed'"
+                    onmouseout="this.style.background='#0071e3'">
+              {{ isSubmitting ? 'Creating...' : 'Create Product' }}
+            </button>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
