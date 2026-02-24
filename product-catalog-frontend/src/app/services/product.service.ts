@@ -9,7 +9,7 @@ import { PageResponse } from './page-response';
 })
 export class ProductService {
 
-  private apiUrl = 'http://localhost:8080/api/products';
+  private apiUrl = '/api/products';
 
   constructor(private http: HttpClient) {}
 

@@ -1,4 +1,5 @@
-#  Retail Product Catalog
+# 
+ Retail Product Catalog
 
 A full-stack retail product catalog application built with Spring Boot, Angular, MySQL, JWT Authentication, and Docker.
 
